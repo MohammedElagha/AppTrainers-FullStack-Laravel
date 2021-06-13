@@ -42,3 +42,6 @@ Route::get('brands', function () {
 		['name' => 'Toyota' , 'country' => 'JAP']
 	]]);
 });
+
+
+Route::get('student/finance/report', 'Student\StudentFinanceController@finance_report');
