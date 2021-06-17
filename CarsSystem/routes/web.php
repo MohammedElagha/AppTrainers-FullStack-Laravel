@@ -15,5 +15,5 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('car/create', 'Car\CarController@create');
-Route::post('car/store', 'Car\CarController@store');
+Route::get('car/{id}/create', 'Car\CarController@create');
+Route::post('car/store/{id}', 'Car\CarController@store');

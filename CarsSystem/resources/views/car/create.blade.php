@@ -6,7 +6,9 @@
 
 					@section('form_content')
 					
-					<form method="POST" action="{{ URL('car/store') }}" enctype="">
+					<form method="POST" action="{{ URL('car/store/' . $id) }}" enctype="">
+
+						<input type="hidden" name="_token" value="{{ csrf_token() }}">
 							
 						<div class="form-group">
 							<label>Brand</label>
