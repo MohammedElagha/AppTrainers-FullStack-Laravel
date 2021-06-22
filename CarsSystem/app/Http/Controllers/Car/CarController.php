@@ -4,50 +4,68 @@ namespace App\Http\Controllers\Car;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 
 class CarController extends Controller
 {
-    public function create ($id) {
-    	return view('car.create')->with('id', $id);
+    public function create () {
+    	return view('car.create');
     }
 
-    public function store (Request $request, $id) {
-    	// brand, company, model, color
-
-    	// HTTP Method: GET, POST
-
-
-
-
-    	// GET params, POST data
+    public function store (Request $request) {
     	$brand = $request['brand'];
-    	$company = $request['company'];
-    	$model = $request['model'];
-    	$color = $request['color'];
+        $company = $request['company'];
+        $color = $request['color'];
+        $model = $request['model'];
 
-    	if ($request->has('brand')) {
-    		$brand = $request['brand'];
-    	}
+        $query = "insert into cars (brand, company, color, model) values ('$brand', '$company', '$color', '$model')";
 
+        $result = DB::insert($query);
+        // DB::query($query);
 
-
-
-
-    	// GET params
-    	
-    	if ($request->query->has('brand')) {
-    		$brand = $request->query('brand');
-    	}
+        return redirect("car/create");
+    }
 
 
+    public function index () {
+        $query = "select cars.id, cars.model, cars.brand, cars.company, cars.color, owners.name as owner_name from cars left join owners on cars.id = owners.car_id";
 
-    	// Headers
-    	if ($request->headers->has('User-Agent')) {
-    		$user_agent = $request->header('User-Agent');
-    	}
+        $data = DB::select($query);
+        // DB::query($query);
 
-        // processing
+        return view('car.index')->with('cars', $data);
+    }
 
-        return redirect("car/$id/create");
+
+
+
+    public function edit ($id) {
+        $query = "select * from cars where id = $id limit 1";
+        $data = DB::select($query);
+        $row = $data[0];
+
+        return view('car.edit')->with('car', $row);
+    }
+
+
+    public function update (Request $request, $id) {
+        $brand = $request['brand'];
+        $company = $request['company'];
+        $color = $request['color'];
+        $model = $request['model'];
+
+        $query = "update cars set brand = '$brand' , company = '$company' , color = '$color' , model = '$model' where id = $id";
+
+        $result = DB::update($query);
+        // DB::query($query);
+
+        return redirect("car/edit/$id");
+    }
+
+
+    public function destroy ($id) {
+        $query = "delete from cars where id = $id";
+        $result = DB::delete($query);
+        return redirect()->back();
     }
 }
