@@ -9,7 +9,9 @@ use App\Student;
 class StudentController extends Controller
 {
     public function index () {
-    	$students = Student::select('*')->get();
+    	$students = Student::with('collage')->withTrashed()->select('*')->get();
+
+        // dd($students->toArray());
 
     	return view('student.index')->with('students', $students);
     }
@@ -64,5 +66,12 @@ class StudentController extends Controller
     	$result = Student::where('id', $id)->delete();
 
     	return redirect()->back();
+    }
+
+
+    public function restore ($id) {
+        $result = Student::where('id', $id)->restore();
+
+        return redirect()->back();
     }
 }

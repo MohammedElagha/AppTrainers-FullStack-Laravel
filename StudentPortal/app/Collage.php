@@ -5,14 +5,14 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Student extends Model
+class Collage extends Model
 {
     use SoftDeletes;
 
-    public function collage () {
-    	return $this->belongsTo('App\Collage');
+    public function students () {
+    	return $this->hasMany('App\Student');
     }
 }
 
 
-// id, name, email, collage_id
+// id, name

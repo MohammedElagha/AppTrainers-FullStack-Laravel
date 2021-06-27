@@ -21,4 +21,7 @@ Route::get('student/create', 'Student\StudentController@create');
 Route::post('student/store', 'Student\StudentController@store');
 Route::get('student/edit/{id}', 'Student\StudentController@edit');
 Route::post('student/update/{id}', 'Student\StudentController@update');
-Route::post('student/delete/{id}', 'Student\StudentController@delete');
+Route::post('student/delete/{id}', 'Student\StudentController@destroy');
+Route::post('student/restore/{id}', 'Student\StudentController@restore');
+
+Route::get('collage', 'Collage\CollageController@index');
