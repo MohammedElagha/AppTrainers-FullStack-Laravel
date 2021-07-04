@@ -12,6 +12,10 @@ class Student extends Model
     public function collage () {
     	return $this->belongsTo('App\Collage');
     }
+
+    public function registered_courses () {
+        return $this->hasMany('App\RegisteredCourse');
+    }
 }
 
 

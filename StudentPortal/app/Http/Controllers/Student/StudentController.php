@@ -5,11 +5,23 @@ namespace App\Http\Controllers\Student;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Student;
+use Illuminate\Support\Facades\Storage;
 
 class StudentController extends Controller
 {
     public function index () {
-    	$students = Student::with('collage')->withTrashed()->select('*')->get();
+        $max_credit = 3;
+
+    	$students = Student::with('collage')
+                    ->with('registered_courses')
+                    ->with(['registered_courses.course' => function ($query) use ($max_credit) {
+                        $query->where('credit', '>=', $max_credit);
+                    }])
+                    ->withTrashed()->select('*')->get();
+
+        foreach ($students as $student) {
+            $student->picture = 'http://localhost/TrainLaravel2021/StudentPortal/storage/app/' . $student->picture;
+        }
 
         // dd($students->toArray());
 
@@ -27,11 +39,29 @@ class StudentController extends Controller
     	$email = $request['email'];
     	$gpa = $request['gpa'];
 
+
+
+        $picture = $request->file('picture');
+        // $name = 'pic.png';
+        // $name = $picture->getClientOriginalName();
+        $file_name = time() + rand(1, 10000000000) . '.' . $picture->getClientOriginalExtension();
+        $path = "uploads/students/$file_name";
+        Storage::disk('local')->put($path, file_get_contents($picture));
+
+
+
     	$student = new Student();
     	$student->name = $name;
     	$student->email = $email;
     	$student->gpa = $gpa;
+        $student->picture = $path;
     	$result = $student->save();
+
+
+        
+
+
+
 
     	return redirect()->back();
     }
